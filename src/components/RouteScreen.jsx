@@ -8,46 +8,46 @@ const routeConfigs = {
     name: '치인고속화도로 충전소',
     distance: '0.4km',
     time: '5분',
-    path: 'M 170 470 L 230 380 L 190 320',
+    path: 'M 170 470 L 230 410 L 270 350',
     keyframes: {
-      left: ['170px', '230px', '190px'],
-      top: ['470px', '380px', '320px']
+      left: ['170px', '230px', '270px'],
+      top: ['470px', '410px', '350px']
     },
-    destPos: { left: '190px', top: '320px' },
+    destPos: { left: '270px', top: '350px' },
     detourPath: 'M 170 470 L 130 450 L 100 400 L 110 330',
     detourWarningPath: 'M 100 400 L 110 330',
     warningPos: { left: '105px', top: '360px' },
-    infoBubblePos: { top: '280px', left: '160px' }
+    infoBubblePos: { top: '290px', left: '190px' }
   },
   '2': {
     name: '행복복지센터 충전소',
     distance: '0.6km',
     time: '8분',
-    path: 'M 170 470 L 230 380 L 190 320 L 250 270',
+    path: 'M 170 470 L 230 410 L 270 350 L 240 200',
     keyframes: {
-      left: ['170px', '230px', '190px', '250px'],
-      top: ['470px', '380px', '320px', '270px']
+      left: ['170px', '230px', '270px', '240px'],
+      top: ['470px', '410px', '350px', '200px']
     },
-    destPos: { left: '250px', top: '270px' },
+    destPos: { left: '240px', top: '200px' },
     detourPath: 'M 170 470 L 130 450 L 100 400 L 110 330 L 150 280',
     detourWarningPath: 'M 110 330 L 150 280',
     warningPos: { left: '130px', top: '305px' },
-    infoBubblePos: { top: '240px', left: '180px' }
+    infoBubblePos: { top: '160px', left: '180px' }
   },
   '3': {
     name: '중앙공원 충전소',
     distance: '1.1km',
     time: '13분',
-    path: 'M 170 470 L 230 380 L 190 320 L 250 270 L 210 210 L 230 140',
+    path: 'M 170 470 L 230 410 L 270 350 L 240 200 L 230 140',
     keyframes: {
-      left: ['170px', '230px', '190px', '250px', '210px', '230px'],
-      top: ['470px', '380px', '320px', '270px', '210px', '140px']
+      left: ['170px', '230px', '270px', '240px', '230px'],
+      top: ['470px', '410px', '350px', '200px', '140px']
     },
     destPos: { left: '230px', top: '140px' },
     detourPath: 'M 170 470 L 130 450 L 100 400 L 110 330 L 150 280 L 190 260',
     detourWarningPath: 'M 110 330 L 150 280',
     warningPos: { left: '130px', top: '305px' },
-    infoBubblePos: { top: '200px', left: '180px' }
+    infoBubblePos: { top: '90px', left: '180px' }
   }
 };
 

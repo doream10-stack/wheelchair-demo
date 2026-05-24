@@ -74,7 +74,7 @@ const DangerScreen = () => {
       }}>
         <AlertTriangle size={24} color="var(--point-red)" fill="var(--point-red)" stroke="var(--white)" style={{ flexShrink: 0, marginTop: '2px' }} />
         <div>
-          <div style={{ color: 'var(--point-red)', fontWeight: '700', fontSize: '16px', marginBottom: '6px' }}>주행 가능 거리가 1km 밖에 남지 않았어요</div>
+          <div style={{ color: 'var(--point-red)', fontWeight: '700', fontSize: '16px', marginBottom: '6px' }}>주행 가능 거리가 0.9km 밖에 남지 않았어요</div>
           <div style={{ color: 'var(--text-sub)', fontSize: '14px' }}>가까운 충전소를 확인하고 충전하세요.</div>
         </div>
       </div>

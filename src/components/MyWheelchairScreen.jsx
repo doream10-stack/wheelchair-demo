@@ -102,20 +102,20 @@ const MyWheelchairScreen = () => {
         <div style={{ flex: 1, backgroundColor: 'var(--white)', borderRadius: '20px', padding: '20px', boxShadow: 'var(--shadow)' }}>
           <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-sub)', marginBottom: '8px' }}>배터리 상태</div>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px', marginBottom: '16px' }}>
-            <span style={{ fontSize: '36px', fontWeight: '800', color: 'var(--text-main)', lineHeight: 1 }}>82</span>
+            <span style={{ fontSize: '36px', fontWeight: '800', color: 'var(--point-red)', lineHeight: 1 }}>8</span>
             <span style={{ fontSize: '20px', fontWeight: '600', color: 'var(--text-sub)' }}>%</span>
           </div>
           
           <div style={{ height: '8px', backgroundColor: '#f0f0f0', borderRadius: '4px', overflow: 'hidden', display: 'flex', marginBottom: '8px' }}>
             <motion.div 
               initial={{ width: 0 }}
-              animate={{ width: '82%' }}
+              animate={{ width: '8%' }}
               transition={{ duration: 1, delay: 0.5, ease: 'easeOut' }}
-              style={{ backgroundColor: 'var(--point-blue)', height: '100%', borderRadius: '4px' }} 
+              style={{ backgroundColor: 'var(--point-red)', height: '100%', borderRadius: '4px' }} 
             />
           </div>
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-             <span style={{ fontSize: '13px', fontWeight: '700', color: 'var(--point-blue)' }}>양호</span>
+             <span style={{ fontSize: '13px', fontWeight: '700', color: 'var(--point-red)' }}>위험</span>
           </div>
         </div>
 
@@ -123,8 +123,8 @@ const MyWheelchairScreen = () => {
         <div style={{ flex: 1, backgroundColor: 'var(--white)', borderRadius: '20px', padding: '20px', boxShadow: 'var(--shadow)' }}>
           <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-sub)', marginBottom: '8px' }}>주행가능거리</div>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px', marginBottom: '16px' }}>
-            <span style={{ fontSize: '36px', fontWeight: '800', color: 'var(--point-blue)', lineHeight: 1 }}>18.6</span>
-            <span style={{ fontSize: '20px', fontWeight: '600', color: 'var(--point-blue)' }}>km</span>
+            <span style={{ fontSize: '36px', fontWeight: '800', color: 'var(--point-red)', lineHeight: 1 }}>0.9</span>
+            <span style={{ fontSize: '20px', fontWeight: '600', color: 'var(--point-red)' }}>km</span>
           </div>
           <div style={{ fontSize: '12px', color: 'var(--text-sub)' }}>
             표준 모드 기준
@@ -133,14 +133,14 @@ const MyWheelchairScreen = () => {
       </motion.div>
 
       {/* Warning Banner */}
-      <motion.div variants={itemVariants} style={{ backgroundColor: '#fff8e1', borderRadius: '16px', padding: '16px 20px', display: 'flex', alignItems: 'flex-start', gap: '12px', marginBottom: '24px' }}>
-        <AlertTriangle size={24} color="#ffb300" style={{ flexShrink: 0, marginTop: '2px' }} />
+      <motion.div variants={itemVariants} style={{ backgroundColor: 'var(--bg-red-light)', borderRadius: '16px', padding: '16px 20px', display: 'flex', alignItems: 'flex-start', gap: '12px', marginBottom: '24px' }}>
+        <AlertTriangle size={24} color="var(--point-red)" fill="var(--point-red)" stroke="var(--white)" style={{ flexShrink: 0, marginTop: '2px' }} />
         <div style={{ flex: 1 }}>
-          <div style={{ fontSize: '14px', fontWeight: '700', color: '#424242', marginBottom: '4px' }}>
-            배터리 점검 권장 시기가 다가오고 있어요
+          <div style={{ fontSize: '14px', fontWeight: '700', color: 'var(--point-red)', marginBottom: '4px' }}>
+            배터리 잔량이 부족하여 방전 위험 상태입니다 (8%)
           </div>
-          <div style={{ fontSize: '13px', color: '#757575' }}>
-            안정적인 주행을 위해 점검을 받아보세요.
+          <div style={{ fontSize: '13px', color: 'var(--text-sub)' }}>
+            주행 가능 거리가 0.9km뿐이니 즉시 가까운 충전소로 이동하세요.
           </div>
         </div>
         <ChevronRight size={20} color="#bdbdbd" style={{ alignSelf: 'center' }} />
