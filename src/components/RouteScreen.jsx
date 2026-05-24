@@ -330,9 +330,10 @@ const RouteScreen = () => {
       >
         {/* Grabber */}
         <div 
+          id="route-sheet-grabber"
           onPointerDown={(e) => dragControls.start(e)}
           onClick={() => setIsCollapsed(!isCollapsed)}
-          style={{ width: '40px', height: '5px', backgroundColor: '#d0d0d0', borderRadius: '3px', margin: '0 auto 12px', cursor: 'ns-resize' }} 
+          style={{ width: '40px', height: '5px', backgroundColor: '#d0d0d0', borderRadius: '3px', margin: '0 auto 12px', cursor: 'ns-resize', touchAction: 'none' }} 
         />
 
         {/* Header */}
