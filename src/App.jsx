@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import TabBar from './components/TabBar';
 import DangerScreen from './components/DangerScreen';
@@ -16,7 +16,8 @@ function App() {
     <div className="app-container">
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
-          <Route path="/" element={<DangerScreen />} />
+          <Route path="/" element={<Navigate to="/recommend" replace />} />
+          <Route path="/danger" element={<DangerScreen />} />
           <Route path="/loading" element={<LoadingScreen />} />
           <Route path="/recommend" element={<RecommendationScreen />} />
           <Route path="/route" element={<RouteScreen />} />

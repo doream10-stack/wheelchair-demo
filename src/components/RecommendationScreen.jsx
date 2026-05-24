@@ -238,7 +238,7 @@ const RecommendationScreen = () => {
                   
                   <div style={{ display: 'flex', gap: '8px' }}>
                     <button 
-                      onClick={() => navigate('/route')}
+                      onClick={() => navigate('/route', { state: { stationId: station.id } })}
                       style={{
                         backgroundColor: '#f2f2f7',
                         color: 'var(--point-blue)',

@@ -29,8 +29,8 @@ const TabBar = () => {
       <TabItem 
         icon={<Home size={28} />} 
         label="Home" 
-        active={isActive('/') || isActive('/route')}
-        onClick={() => navigate('/')} 
+        active={isActive('/danger') || isActive('/route')}
+        onClick={() => navigate('/danger')} 
       />
       <TabItem 
         icon={<BatteryCharging size={28} />} 
