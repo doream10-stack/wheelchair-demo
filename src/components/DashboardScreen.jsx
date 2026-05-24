@@ -14,6 +14,7 @@ const DashboardScreen = () => {
       style={{
         flex: 1,
         width: '100%',
+        minWidth: '100%',
         height: '100%',
         boxSizing: 'border-box',
         display: 'flex',

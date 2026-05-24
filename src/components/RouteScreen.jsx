@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Leaf, ThermometerSnowflake, Mountain, AlertTriangle, Cloud, Map as MapIcon, Navigation as NavigationIcon, Search, ChevronRight, Home, BatteryCharging, Navigation, Plus, Play, Square } from 'lucide-react';
+import { Leaf, ThermometerSnowflake, Mountain, AlertTriangle, Cloud, Map as MapIcon, Navigation as NavigationIcon, Search, ChevronRight, Home, BatteryCharging, Plus, Play, Square } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const RouteScreen = () => {
