@@ -8,10 +8,10 @@ const routeConfigs = {
     name: '치인고속화도로 충전소',
     distance: '0.4km',
     time: '5분',
-    path: 'M 170 470 L 230 410 L 270 350',
+    path: 'M 170 470 L 180 560 L 245 560 L 285 460 L 270 350',
     keyframes: {
-      left: ['170px', '230px', '270px'],
-      top: ['470px', '410px', '350px']
+      left: ['170px', '180px', '245px', '285px', '270px'],
+      top: ['470px', '560px', '560px', '460px', '350px']
     },
     destPos: { left: '270px', top: '350px' },
     detourPath: 'M 170 470 L 130 450 L 100 400 L 110 330',
@@ -23,10 +23,10 @@ const routeConfigs = {
     name: '행복복지센터 충전소',
     distance: '0.6km',
     time: '8분',
-    path: 'M 170 470 L 230 410 L 270 350 L 240 200',
+    path: 'M 170 470 L 130 360 L 150 240 L 225 215 L 240 200',
     keyframes: {
-      left: ['170px', '230px', '270px', '240px'],
-      top: ['470px', '410px', '350px', '200px']
+      left: ['170px', '130px', '150px', '225px', '240px'],
+      top: ['470px', '360px', '240px', '215px', '200px']
     },
     destPos: { left: '240px', top: '200px' },
     detourPath: 'M 170 470 L 130 450 L 100 400 L 110 330 L 150 280',
@@ -38,10 +38,10 @@ const routeConfigs = {
     name: '중앙공원 충전소',
     distance: '1.1km',
     time: '13분',
-    path: 'M 170 470 L 230 410 L 270 350 L 240 200 L 230 140',
+    path: 'M 170 470 L 130 360 L 150 240 L 225 215 L 230 140',
     keyframes: {
-      left: ['170px', '230px', '270px', '240px', '230px'],
-      top: ['470px', '410px', '350px', '200px', '140px']
+      left: ['170px', '130px', '150px', '225px', '230px'],
+      top: ['470px', '360px', '240px', '215px', '140px']
     },
     destPos: { left: '230px', top: '140px' },
     detourPath: 'M 170 470 L 130 450 L 100 400 L 110 330 L 150 280 L 190 260',

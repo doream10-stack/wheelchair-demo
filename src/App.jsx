@@ -16,8 +16,7 @@ function App() {
     <div className="app-container">
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
-          <Route path="/" element={<Navigate to="/recommend" replace />} />
-          <Route path="/danger" element={<DangerScreen />} />
+          <Route path="/" element={<DangerScreen />} />
           <Route path="/loading" element={<LoadingScreen />} />
           <Route path="/recommend" element={<RecommendationScreen />} />
           <Route path="/route" element={<RouteScreen />} />
