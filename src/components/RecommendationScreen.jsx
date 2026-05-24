@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronDown, Navigation, Star, Search, MapPin, Battery } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useDragControls } from 'framer-motion';
 
 const RecommendationScreen = () => {
   const [toastMessage, setToastMessage] = useState('');
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const dragControls = useDragControls();
   const navigate = useNavigate();
 
   const initialStations = [
@@ -94,8 +96,6 @@ const RecommendationScreen = () => {
         width: '100%',
         height: '100%',
         boxSizing: 'border-box',
-        display: 'flex',
-        flexDirection: 'column',
         backgroundColor: 'var(--white)',
         position: 'relative',
         overflow: 'hidden',
@@ -103,10 +103,14 @@ const RecommendationScreen = () => {
     >
       {/* Mock Map Area */}
       <div style={{
-        height: '340px',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
         backgroundColor: '#e8f0f6',
-        position: 'relative',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        zIndex: 1
       }}>
         <motion.div 
           drag
@@ -130,7 +134,7 @@ const RecommendationScreen = () => {
             {/* Current Location Marker */}
             <div style={{ position: 'absolute', top: '55%', left: '35%', transform: 'translate(-50%, -50%)', zIndex: 2 }}>
                <div style={{ width: '40px', height: '40px', backgroundColor: 'rgba(0, 102, 255, 0.2)', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                 <div style={{ width: '16px', height: '16px', backgroundColor: 'var(--point-blue)', borderRadius: '50%', border: '2px solid var(--white)' }} />
+                  <div style={{ width: '16px', height: '16px', backgroundColor: 'var(--point-blue)', borderRadius: '50%', border: '2px solid var(--white)' }} />
                </div>
             </div>
 
@@ -142,19 +146,18 @@ const RecommendationScreen = () => {
         </motion.div>
 
         {/* Map UI Elements (Static) */}
-        <div style={{ position: 'absolute', top: 'var(--safe-area-top)', left: '20px', backgroundColor: 'var(--white)', padding: '12px 16px', borderRadius: '16px', boxShadow: 'var(--shadow)', display: 'flex', alignItems: 'center', gap: '24px', zIndex: 2 }}>
+        <div style={{ position: 'absolute', top: 'var(--safe-area-top)', left: '20px', backgroundColor: 'var(--white)', padding: '12px 16px', borderRadius: '16px', boxShadow: 'var(--shadow)', zIndex: 2 }}>
           <div>
             <div style={{ fontWeight: '700', fontSize: '16px', marginBottom: '4px' }}>추천 충전소</div>
             <div style={{ color: 'var(--text-sub)', fontSize: '13px' }}>반경 2km 내</div>
           </div>
-          <Search size={20} color="var(--text-sub)" />
         </div>
 
         <div style={{ position: 'absolute', top: 'var(--safe-area-top)', right: '20px', width: '48px', height: '48px', backgroundColor: 'var(--white)', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', boxShadow: 'var(--shadow)', zIndex: 2 }}>
           <Navigation size={22} color="var(--text-main)" />
         </div>
 
-        <div style={{ position: 'absolute', bottom: '20px', right: '20px', backgroundColor: 'var(--white)', padding: '8px 12px', borderRadius: '20px', boxShadow: 'var(--shadow)', display: 'flex', alignItems: 'center', gap: '6px', zIndex: 2, fontSize: '13px', fontWeight: '600' }}>
+        <div style={{ position: 'absolute', bottom: '180px', right: '20px', backgroundColor: 'var(--white)', padding: '8px 12px', borderRadius: '20px', boxShadow: 'var(--shadow)', display: 'flex', alignItems: 'center', gap: '6px', zIndex: 2, fontSize: '13px', fontWeight: '600' }}>
           <div style={{ width: '8px', height: '8px', backgroundColor: 'var(--point-blue)', borderRadius: '50%' }} />
           내 위치
         </div>
@@ -162,22 +165,43 @@ const RecommendationScreen = () => {
 
       {/* List Area / Bottom Sheet */}
       <motion.div 
+        drag="y"
+        dragControls={dragControls}
+        dragListener={false}
+        dragConstraints={{ top: 0, bottom: 350 }}
+        dragElastic={0.1}
+        onDragEnd={(event, info) => {
+          if (info.offset.y > 60) {
+            setIsCollapsed(true);
+          } else if (info.offset.y < -60) {
+            setIsCollapsed(false);
+          }
+        }}
+        animate={{ y: isCollapsed ? 350 : 0 }}
+        transition={{ type: 'spring', damping: 25, stiffness: 200 }}
         style={{
-          flex: 1,
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: '520px',
           backgroundColor: 'var(--white)',
           borderTopLeftRadius: '24px',
           borderTopRightRadius: '24px',
-          marginTop: '-24px',
           padding: '16px 20px',
           paddingBottom: 'calc(var(--safe-area-bottom) + 90px)',
           zIndex: 3,
           overflowY: 'auto',
-          position: 'relative'
+          boxShadow: '0 -4px 20px rgba(0,0,0,0.08)'
         }} 
         className="no-scrollbar"
       >
         {/* Grabber Handle */}
-        <div style={{ width: '40px', height: '5px', backgroundColor: '#d0d0d0', borderRadius: '3px', margin: '0 auto 20px' }} />
+        <div 
+          onPointerDown={(e) => dragControls.start(e)}
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          style={{ width: '40px', height: '5px', backgroundColor: '#d0d0d0', borderRadius: '3px', margin: '0 auto 20px', cursor: 'ns-resize' }} 
+        />
         
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: '700', margin: 0 }}>가까운 충전소</h2>

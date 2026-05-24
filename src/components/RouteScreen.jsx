@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useDragControls } from 'framer-motion';
 import { Leaf, ThermometerSnowflake, Mountain, AlertTriangle, Cloud, Map as MapIcon, Navigation as NavigationIcon, ChevronRight, Home, BatteryCharging, Play, Square, ChevronUp, ChevronDown } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -53,6 +53,7 @@ const routeConfigs = {
 
 const RouteScreen = () => {
   const [toastMessage, setToastMessage] = useState('');
+  const dragControls = useDragControls();
   const [isSimulating, setIsSimulating] = useState(false);
   const [simProgress, setSimProgress] = useState(0);
   const [showSimModal, setShowSimModal] = useState(false);
@@ -298,6 +299,18 @@ const RouteScreen = () => {
 
       {/* --- Collapsible Bottom Sheet --- */}
       <motion.div 
+        drag="y"
+        dragControls={dragControls}
+        dragListener={false}
+        dragConstraints={{ top: 0, bottom: 140 }}
+        dragElastic={0.1}
+        onDragEnd={(event, info) => {
+          if (info.offset.y > 40) {
+            setIsCollapsed(true);
+          } else if (info.offset.y < -40) {
+            setIsCollapsed(false);
+          }
+        }}
         animate={{ y: isCollapsed ? 140 : 0 }}
         transition={{ type: 'spring', damping: 25, stiffness: 200 }}
         style={{ 
@@ -317,8 +330,9 @@ const RouteScreen = () => {
       >
         {/* Grabber */}
         <div 
+          onPointerDown={(e) => dragControls.start(e)}
           onClick={() => setIsCollapsed(!isCollapsed)}
-          style={{ width: '40px', height: '5px', backgroundColor: '#d0d0d0', borderRadius: '3px', margin: '0 auto 12px', cursor: 'pointer' }} 
+          style={{ width: '40px', height: '5px', backgroundColor: '#d0d0d0', borderRadius: '3px', margin: '0 auto 12px', cursor: 'ns-resize' }} 
         />
 
         {/* Header */}

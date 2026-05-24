@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AlertTriangle, Battery, BatteryWarning } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { AlertTriangle, Battery, BatteryWarning, CheckCircle2, ShieldAlert, Sparkles, PhoneCall } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const DangerScreen = () => {
+  const [showSafetyModal, setShowSafetyModal] = useState(false);
+  const [isEcoMode, setIsEcoMode] = useState(false);
+  const [isEmergencyShared, setIsEmergencyShared] = useState(false);
   const navigate = useNavigate();
 
   return (
@@ -74,8 +77,12 @@ const DangerScreen = () => {
       }}>
         <AlertTriangle size={24} color="var(--point-red)" fill="var(--point-red)" stroke="var(--white)" style={{ flexShrink: 0, marginTop: '2px' }} />
         <div>
-          <div style={{ color: 'var(--point-red)', fontWeight: '700', fontSize: '16px', marginBottom: '6px' }}>주행 가능 거리가 0.9km 밖에 남지 않았어요</div>
-          <div style={{ color: 'var(--text-sub)', fontSize: '14px' }}>가까운 충전소를 확인하고 충전하세요.</div>
+          <div style={{ color: 'var(--point-red)', fontWeight: '700', fontSize: '16px', marginBottom: '6px' }}>
+            주행 가능 거리가 {isEcoMode ? '1.3km (에코)' : '0.9km'} 밖에 남지 않았어요
+          </div>
+          <div style={{ color: 'var(--text-sub)', fontSize: '14px' }}>
+            {isEcoMode ? '배터리 절약 모드가 작동 중입니다. 최적 경로로 충전소로 이동하세요.' : '가까운 충전소를 확인하고 충전하세요.'}
+          </div>
         </div>
       </div>
 
@@ -86,7 +93,14 @@ const DangerScreen = () => {
         padding: '20px',
         marginBottom: '24px'
       }}>
-        <div style={{ fontSize: '15px', fontWeight: '600', color: 'var(--text-main)', marginBottom: '12px' }}>배터리 상태</div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+          <div style={{ fontSize: '15px', fontWeight: '600', color: 'var(--text-main)' }}>배터리 상태</div>
+          {isEcoMode && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', backgroundColor: '#e2f9e9', color: '#10b981', padding: '4px 8px', borderRadius: '8px', fontSize: '11px', fontWeight: '700' }}>
+              <Sparkles size={12} /> 에코 모드 활성화됨
+            </div>
+          )}
+        </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <div style={{ color: 'var(--point-red)', fontSize: '32px', fontWeight: '700', fontFamily: 'system-ui' }}>8%</div>
           <div style={{ flex: 1, height: '10px', backgroundColor: '#f0f0f0', borderRadius: '5px', overflow: 'hidden' }}>
@@ -119,6 +133,7 @@ const DangerScreen = () => {
           가까운 충전소 찾기
         </button>
         <button 
+          onClick={() => setShowSafetyModal(true)}
           style={{
             backgroundColor: 'var(--white)',
             color: 'var(--text-main)',
@@ -133,6 +148,178 @@ const DangerScreen = () => {
           확인
         </button>
       </div>
+
+      {/* Safety Guard Modal */}
+      <AnimatePresence>
+        {showSafetyModal && (
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            zIndex: 100,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: '20px'
+          }}>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              style={{
+                backgroundColor: 'var(--white)',
+                borderRadius: '24px',
+                padding: '24px',
+                width: '100%',
+                maxWidth: '340px',
+                boxShadow: '0 20px 40px rgba(0,0,0,0.2)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '20px'
+              }}
+            >
+              {/* Header */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <div style={{ backgroundColor: '#fff0f0', width: '40px', height: '40px', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'var(--point-red)' }}>
+                  <ShieldAlert size={22} />
+                </div>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: '18px', fontWeight: '700', color: 'var(--text-main)' }}>안전 조치 가이드</h3>
+                  <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-sub)' }}>방전 대비 최적 주행 설정을 적용하세요.</p>
+                </div>
+              </div>
+
+              {/* Toggles Container */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                
+                {/* Eco Mode Toggle */}
+                <div 
+                  onClick={() => setIsEcoMode(!isEcoMode)}
+                  style={{
+                    border: '1px solid var(--border)',
+                    borderRadius: '16px',
+                    padding: '16px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    backgroundColor: isEcoMode ? '#f0fdf4' : 'transparent',
+                    borderColor: isEcoMode ? '#86efac' : 'var(--border)',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  <div style={{ flex: 1, paddingRight: '12px' }}>
+                    <div style={{ fontSize: '14px', fontWeight: '700', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      배터리 절약 모드 <Sparkles size={14} color={isEcoMode ? '#10b981' : 'var(--text-sub)'} />
+                    </div>
+                    <div style={{ fontSize: '11px', color: 'var(--text-sub)', marginTop: '4px', lineHeight: '1.4' }}>
+                      모터 토크 제한으로 이동 거리를 1.3km까지 보장합니다.
+                    </div>
+                  </div>
+                  
+                  {/* Switch UI */}
+                  <div style={{
+                    width: '44px',
+                    height: '24px',
+                    backgroundColor: isEcoMode ? '#10b981' : '#e5e7eb',
+                    borderRadius: '12px',
+                    padding: '2px',
+                    display: 'flex',
+                    justifyContent: isEcoMode ? 'flex-end' : 'flex-start',
+                    alignItems: 'center',
+                    transition: 'background-color 0.2s ease',
+                    boxSizing: 'border-box'
+                  }}>
+                    <div style={{
+                      width: '20px',
+                      height: '20px',
+                      backgroundColor: 'white',
+                      borderRadius: '50%',
+                      boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                    }} />
+                  </div>
+                </div>
+
+                {/* Emergency Contact Toggle */}
+                <div 
+                  onClick={() => setIsEmergencyShared(!isEmergencyShared)}
+                  style={{
+                    border: '1px solid var(--border)',
+                    borderRadius: '16px',
+                    padding: '16px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    backgroundColor: isEmergencyShared ? '#eff6ff' : 'transparent',
+                    borderColor: isEmergencyShared ? '#bfdbfe' : 'var(--border)',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  <div style={{ flex: 1, paddingRight: '12px' }}>
+                    <div style={{ fontSize: '14px', fontWeight: '700', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      보호자 긴급 위치 공유 <PhoneCall size={14} color={isEmergencyShared ? 'var(--point-blue)' : 'var(--text-sub)'} />
+                    </div>
+                    <div style={{ fontSize: '11px', color: 'var(--text-sub)', marginTop: '4px', lineHeight: '1.4' }}>
+                      방전 직전에 미리 등록된 보호자에게 현재 GPS 주소를 전송합니다.
+                    </div>
+                  </div>
+                  
+                  {/* Switch UI */}
+                  <div style={{
+                    width: '44px',
+                    height: '24px',
+                    backgroundColor: isEmergencyShared ? 'var(--point-blue)' : '#e5e7eb',
+                    borderRadius: '12px',
+                    padding: '2px',
+                    display: 'flex',
+                    justifyContent: isEmergencyShared ? 'flex-end' : 'flex-start',
+                    alignItems: 'center',
+                    transition: 'background-color 0.2s ease',
+                    boxSizing: 'border-box'
+                  }}>
+                    <div style={{
+                      width: '20px',
+                      height: '20px',
+                      backgroundColor: 'white',
+                      borderRadius: '50%',
+                      boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                    }} />
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Action Button */}
+              <button
+                onClick={() => setShowSafetyModal(false)}
+                style={{
+                  backgroundColor: 'var(--text-main)',
+                  color: 'var(--white)',
+                  border: 'none',
+                  borderRadius: '12px',
+                  padding: '14px',
+                  fontSize: '15px',
+                  fontWeight: '700',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '6px',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
+                }}
+              >
+                <CheckCircle2 size={18} />
+                설정 및 안전 모드 적용
+              </button>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };
