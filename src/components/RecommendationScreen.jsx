@@ -91,6 +91,9 @@ const RecommendationScreen = () => {
       exit={{ opacity: 0 }}
       style={{
         flex: 1,
+        width: '100%',
+        height: '100%',
+        boxSizing: 'border-box',
         display: 'flex',
         flexDirection: 'column',
         backgroundColor: 'var(--white)',
@@ -166,7 +169,7 @@ const RecommendationScreen = () => {
           borderTopRightRadius: '24px',
           marginTop: '-24px',
           padding: '16px 20px',
-          paddingBottom: 'calc(var(--safe-area-bottom) + 80px)',
+          paddingBottom: 'calc(var(--safe-area-bottom) + 90px)',
           zIndex: 3,
           overflowY: 'auto',
           position: 'relative'

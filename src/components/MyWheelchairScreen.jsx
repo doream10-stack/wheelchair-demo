@@ -48,11 +48,15 @@ const MyWheelchairScreen = () => {
       exit="exit"
       style={{
         flex: 1,
+        width: '100%',
+        height: '100%',
+        boxSizing: 'border-box',
         display: 'flex',
         flexDirection: 'column',
         backgroundColor: 'var(--bg-app)', // off-white
         padding: '24px 20px',
         paddingTop: 'calc(var(--safe-area-top) + 20px)',
+        paddingBottom: 'calc(var(--safe-area-bottom) + 90px)',
         overflowY: 'auto'
       }}
       className="no-scrollbar"

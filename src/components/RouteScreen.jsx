@@ -94,6 +94,9 @@ const RouteScreen = () => {
       exit={{ opacity: 0 }}
       style={{
         flex: 1,
+        width: '100%',
+        height: '100%',
+        boxSizing: 'border-box',
         display: 'flex',
         flexDirection: 'column',
         position: 'relative',
@@ -282,9 +285,6 @@ const RouteScreen = () => {
 
       {/* --- Bottom Sheet --- */}
       <motion.div 
-        drag="y"
-        dragConstraints={{ top: -100, bottom: 50 }}
-        dragElastic={0.2}
         style={{ 
           position: 'absolute', 
           bottom: '0', 
@@ -294,12 +294,13 @@ const RouteScreen = () => {
           borderTopLeftRadius: '24px', 
           borderTopRightRadius: '24px',
           padding: '16px 20px',
-          paddingBottom: 'calc(var(--safe-area-bottom) + 80px)', // space for tab bar
+          paddingBottom: 'calc(var(--safe-area-bottom) + 90px)', // space for tab bar
           boxShadow: '0 -4px 20px rgba(0,0,0,0.08)',
           zIndex: 10,
-          cursor: 'grab'
+          maxHeight: '50vh',
+          overflowY: 'auto'
         }}
-        whileTap={{ cursor: 'grabbing' }}
+        className="no-scrollbar"
       >
         {/* Grabber */}
         <div style={{ width: '40px', height: '5px', backgroundColor: '#d0d0d0', borderRadius: '3px', margin: '0 auto 20px' }} />
