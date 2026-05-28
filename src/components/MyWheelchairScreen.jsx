@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bell, CheckCircle2, AlertTriangle, MapPin, Wrench, Siren, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useWheelchair } from '../context/WheelchairContext';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -25,6 +26,7 @@ const itemVariants = {
 
 const MyWheelchairScreen = () => {
   const [toastMessage, setToastMessage] = useState('');
+  const { battery, range, isEcoMode } = useWheelchair();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,6 +41,12 @@ const MyWheelchairScreen = () => {
   const handleAction = (message) => {
     setToastMessage(message);
   };
+
+  // Dynamic colors and status text based on battery level
+  const batteryColor = battery <= 15 ? 'var(--point-red)' : battery <= 30 ? '#ff9100' : '#10b981';
+  const batteryStatusText = battery <= 15 ? '위험' : battery <= 30 ? '경고' : '양호';
+  const systemStatusText = battery <= 15 ? '주의 요망' : '정상';
+  const systemStatusColor = battery <= 15 ? 'var(--point-red)' : '#00c853';
 
   return (
     <motion.div 
@@ -80,8 +88,12 @@ const MyWheelchairScreen = () => {
           <Bell size={24} color="var(--text-main)" />
           
           <div style={{ backgroundColor: 'var(--white)', padding: '12px 16px', borderRadius: '16px', boxShadow: 'var(--shadow)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
-            <CheckCircle2 size={20} color="#00c853" />
-            <div style={{ fontSize: '12px', fontWeight: '700', color: 'var(--text-main)' }}>정상</div>
+            {battery <= 15 ? (
+              <AlertTriangle size={20} color={systemStatusColor} />
+            ) : (
+              <CheckCircle2 size={20} color={systemStatusColor} />
+            )}
+            <div style={{ fontSize: '12px', fontWeight: '700', color: 'var(--text-main)' }}>{systemStatusText}</div>
             <div style={{ fontSize: '11px', color: 'var(--text-sub)' }}>연결됨</div>
           </div>
         </div>
@@ -102,20 +114,20 @@ const MyWheelchairScreen = () => {
         <div style={{ flex: 1, backgroundColor: 'var(--white)', borderRadius: '20px', padding: '20px', boxShadow: 'var(--shadow)' }}>
           <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-sub)', marginBottom: '8px' }}>배터리 상태</div>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px', marginBottom: '16px' }}>
-            <span style={{ fontSize: '36px', fontWeight: '800', color: 'var(--point-red)', lineHeight: 1 }}>8</span>
+            <span style={{ fontSize: '36px', fontWeight: '800', color: batteryColor, lineHeight: 1 }}>{battery}</span>
             <span style={{ fontSize: '20px', fontWeight: '600', color: 'var(--text-sub)' }}>%</span>
           </div>
           
           <div style={{ height: '8px', backgroundColor: '#f0f0f0', borderRadius: '4px', overflow: 'hidden', display: 'flex', marginBottom: '8px' }}>
             <motion.div 
               initial={{ width: 0 }}
-              animate={{ width: '8%' }}
-              transition={{ duration: 1, delay: 0.5, ease: 'easeOut' }}
-              style={{ backgroundColor: 'var(--point-red)', height: '100%', borderRadius: '4px' }} 
+              animate={{ width: `${battery}%` }}
+              transition={{ duration: 0.8, ease: 'easeOut' }}
+              style={{ backgroundColor: batteryColor, height: '100%', borderRadius: '4px' }} 
             />
           </div>
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-             <span style={{ fontSize: '13px', fontWeight: '700', color: 'var(--point-red)' }}>위험</span>
+             <span style={{ fontSize: '13px', fontWeight: '700', color: batteryColor }}>{batteryStatusText}</span>
           </div>
         </div>
 
@@ -123,28 +135,43 @@ const MyWheelchairScreen = () => {
         <div style={{ flex: 1, backgroundColor: 'var(--white)', borderRadius: '20px', padding: '20px', boxShadow: 'var(--shadow)' }}>
           <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-sub)', marginBottom: '8px' }}>주행가능거리</div>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px', marginBottom: '16px' }}>
-            <span style={{ fontSize: '36px', fontWeight: '800', color: 'var(--point-red)', lineHeight: 1 }}>0.9</span>
-            <span style={{ fontSize: '20px', fontWeight: '600', color: 'var(--point-red)' }}>km</span>
+            <span style={{ fontSize: '36px', fontWeight: '800', color: batteryColor, lineHeight: 1 }}>{range}</span>
+            <span style={{ fontSize: '20px', fontWeight: '600', color: batteryColor }}>km</span>
           </div>
           <div style={{ fontSize: '12px', color: 'var(--text-sub)' }}>
-            표준 모드 기준
+            {isEcoMode ? '에코 모드 기준' : '표준 모드 기준'}
           </div>
         </div>
       </motion.div>
 
       {/* Warning Banner */}
-      <motion.div variants={itemVariants} style={{ backgroundColor: 'var(--bg-red-light)', borderRadius: '16px', padding: '16px 20px', display: 'flex', alignItems: 'flex-start', gap: '12px', marginBottom: '24px' }}>
-        <AlertTriangle size={24} color="var(--point-red)" fill="var(--point-red)" stroke="var(--white)" style={{ flexShrink: 0, marginTop: '2px' }} />
-        <div style={{ flex: 1 }}>
-          <div style={{ fontSize: '14px', fontWeight: '700', color: 'var(--point-red)', marginBottom: '4px' }}>
-            배터리 잔량이 부족하여 방전 위험 상태입니다 (8%)
+      {battery <= 15 && (
+        <motion.div 
+          variants={itemVariants} 
+          onClick={() => navigate('/')}
+          style={{ 
+            backgroundColor: 'var(--bg-red-light)', 
+            borderRadius: '16px', 
+            padding: '16px 20px', 
+            display: 'flex', 
+            alignItems: 'flex-start', 
+            gap: '12px', 
+            marginBottom: '24px',
+            cursor: 'pointer'
+          }}
+        >
+          <AlertTriangle size={24} color="var(--point-red)" fill="var(--point-red)" stroke="var(--white)" style={{ flexShrink: 0, marginTop: '2px' }} />
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: '14px', fontWeight: '700', color: 'var(--point-red)', marginBottom: '4px' }}>
+              배터리 잔량이 부족하여 방전 위험 상태입니다 ({battery}%)
+            </div>
+            <div style={{ fontSize: '13px', color: 'var(--text-sub)' }}>
+              주행 가능 거리가 {range}km뿐이니 즉시 가까운 충전소로 이동하세요.
+            </div>
           </div>
-          <div style={{ fontSize: '13px', color: 'var(--text-sub)' }}>
-            주행 가능 거리가 0.9km뿐이니 즉시 가까운 충전소로 이동하세요.
-          </div>
-        </div>
-        <ChevronRight size={20} color="#bdbdbd" style={{ alignSelf: 'center' }} />
-      </motion.div>
+          <ChevronRight size={20} color="#bdbdbd" style={{ alignSelf: 'center' }} />
+        </motion.div>
+      )}
 
       {/* Action Buttons */}
       <motion.div variants={itemVariants} style={{ display: 'flex', gap: '12px', paddingBottom: '30px' }}>

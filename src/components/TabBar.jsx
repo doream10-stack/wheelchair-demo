@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, BatteryCharging, Navigation, Plus } from 'lucide-react';
+import { Home, BatteryCharging, Navigation, Sliders } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const TabBar = () => {
@@ -45,10 +45,10 @@ const TabBar = () => {
         onClick={() => navigate('/wheelchair')}
       />
       <TabItem 
-        icon={<Plus size={28} />} 
-        label="Add" 
-        active={isActive('/add')}
-        onClick={() => {}}
+        icon={<Sliders size={28} />} 
+        label="데모 제어" 
+        active={isActive('/demo')}
+        onClick={() => navigate('/demo')}
       />
     </div>
   );

@@ -1,0 +1,23 @@
+{
+  "name": "Smart Wheelchair Demo",
+  "short_name": "WheelchairApp",
+  "description": "Smart Wheelchair Battery and Navigation Management",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f4f5f9",
+  "theme_color": "#f4f5f9",
+  "lang": "en",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "blue_wheelchair.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "blue_wheelchair.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

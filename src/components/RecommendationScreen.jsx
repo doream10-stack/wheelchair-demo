@@ -6,8 +6,22 @@ import { motion, AnimatePresence, useDragControls } from 'framer-motion';
 const RecommendationScreen = () => {
   const [toastMessage, setToastMessage] = useState('');
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [favorites, setFavorites] = useState([]);
   const dragControls = useDragControls();
   const navigate = useNavigate();
+
+  const toggleFavorite = (stationId, stationName) => {
+    setFavorites(prev => {
+      const isAlreadyFav = prev.includes(stationId);
+      if (isAlreadyFav) {
+        setToastMessage(`${stationName}이(가) 즐겨찾기에서 해제되었습니다.`);
+        return prev.filter(id => id !== stationId);
+      } else {
+        setToastMessage(`${stationName}이(가) 즐겨찾기에 추가되었습니다.`);
+        return [...prev, stationId];
+      }
+    });
+  };
 
   const initialStations = [
     {
@@ -229,7 +243,17 @@ const RecommendationScreen = () => {
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '4px' }}>
                   <h3 style={{ fontSize: '16px', fontWeight: '600', margin: 0 }}>{station.name}</h3>
-                  <Star size={20} color="#d0d0d0" />
+                  <motion.div 
+                    whileTap={{ scale: 1.3 }} 
+                    onClick={() => toggleFavorite(station.id, station.name)}
+                    style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px', margin: '-4px' }}
+                  >
+                    <Star 
+                      size={20} 
+                      color={favorites.includes(station.id) ? '#ffb300' : '#d0d0d0'} 
+                      fill={favorites.includes(station.id) ? '#ffb300' : 'transparent'} 
+                    />
+                  </motion.div>
                 </div>
                 
                 <div style={{ fontSize: '13px', color: 'var(--text-sub)', marginBottom: '8px' }}>

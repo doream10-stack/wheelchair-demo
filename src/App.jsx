@@ -8,6 +8,7 @@ import RecommendationScreen from './components/RecommendationScreen';
 import RouteScreen from './components/RouteScreen';
 import MyWheelchairScreen from './components/MyWheelchairScreen';
 import DashboardScreen from './components/DashboardScreen';
+import DemoController from './components/DemoController';
 
 function App() {
   const location = useLocation();
@@ -22,6 +23,7 @@ function App() {
           <Route path="/route" element={<RouteScreen />} />
           <Route path="/wheelchair" element={<MyWheelchairScreen />} />
           <Route path="/dashboard" element={<DashboardScreen />} />
+          <Route path="/demo" element={<DemoController />} />
         </Routes>
       </AnimatePresence>
       <TabBar />

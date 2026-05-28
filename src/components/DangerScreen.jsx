@@ -1,14 +1,340 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AlertTriangle, Battery, BatteryWarning, CheckCircle2, ShieldAlert, Sparkles, PhoneCall } from 'lucide-react';
+import { AlertTriangle, Battery, CheckCircle2, ShieldAlert, Sparkles, PhoneCall, Check, Navigation, MapPin, Compass } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useWheelchair } from '../context/WheelchairContext';
 
 const DangerScreen = () => {
   const [showSafetyModal, setShowSafetyModal] = useState(false);
-  const [isEcoMode, setIsEcoMode] = useState(false);
-  const [isEmergencyShared, setIsEmergencyShared] = useState(false);
+  const {
+    battery,
+    isEcoMode,
+    setIsEcoMode,
+    isEmergencyShared,
+    setIsEmergencyShared,
+    range
+  } = useWheelchair();
   const navigate = useNavigate();
 
+  const isBatteryLow = battery <= 15;
+
+  // Healthy Dashboard UI Layout (battery > 15%)
+  if (!isBatteryLow) {
+    return (
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        style={{
+          flex: 1,
+          width: '100%',
+          height: '100%',
+          boxSizing: 'border-box',
+          display: 'flex',
+          flexDirection: 'column',
+          backgroundColor: 'var(--bg-app)',
+          padding: '24px 20px',
+          paddingTop: 'calc(var(--safe-area-top) + 10px)',
+          paddingBottom: 'calc(var(--safe-area-bottom) + 90px)',
+          overflowY: 'auto',
+        }}
+        className="no-scrollbar"
+      >
+        {/* Header Status */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '20px', marginBottom: '24px' }}>
+          <div style={{
+            backgroundColor: '#e8fafd',
+            width: '80px',
+            height: '80px',
+            borderRadius: '50%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            color: 'var(--point-blue)',
+            boxShadow: '0 8px 16px rgba(0, 102, 255, 0.1)',
+            marginBottom: '16px'
+          }}>
+            <Compass size={40} className="pulse-blue" />
+          </div>
+          <h1 style={{ fontSize: '28px', fontWeight: '800', color: 'var(--text-main)', marginBottom: '8px' }}>
+            안전 주행 상태
+          </h1>
+          <p style={{ fontSize: '14px', color: 'var(--text-sub)', textAlign: 'center', lineHeight: '1.5', fontWeight: '500' }}>
+            휠체어의 전원 및 구동 상태가 정상입니다.<br />
+            목적지까지 편안하고 안전하게 이동하세요.
+          </p>
+        </div>
+
+        {/* Battery Status Card */}
+        <div style={{
+          backgroundColor: 'var(--white)',
+          borderRadius: '20px',
+          padding: '20px',
+          boxShadow: 'var(--shadow)',
+          marginBottom: '16px',
+          border: '1px solid var(--border)'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+            <div style={{ fontSize: '14px', fontWeight: '700', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Battery size={18} color="var(--point-blue)" />
+              휠체어 배터리
+            </div>
+            <span style={{ fontSize: '12px', fontWeight: '700', color: '#10b981', backgroundColor: '#e2f9e9', padding: '4px 8px', borderRadius: '8px' }}>
+              안정적임
+            </span>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px', marginBottom: '12px' }}>
+            <span style={{ fontSize: '32px', fontWeight: '800', color: 'var(--text-main)', lineHeight: 1 }}>{battery}</span>
+            <span style={{ fontSize: '16px', fontWeight: '600', color: 'var(--text-sub)' }}>%</span>
+          </div>
+
+          <div style={{ height: '8px', backgroundColor: '#f0f0f0', borderRadius: '4px', overflow: 'hidden', display: 'flex' }}>
+            <motion.div 
+              initial={{ width: 0 }}
+              animate={{ width: `${battery}%` }}
+              transition={{ duration: 0.8, ease: 'easeOut' }}
+              style={{ backgroundColor: 'var(--point-blue)', height: '100%', borderRadius: '4px' }} 
+            />
+          </div>
+        </div>
+
+        {/* Range Card */}
+        <div style={{
+          backgroundColor: 'var(--white)',
+          borderRadius: '20px',
+          padding: '20px',
+          boxShadow: 'var(--shadow)',
+          marginBottom: '20px',
+          border: '1px solid var(--border)'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+            <span style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-sub)' }}>남은 보장 주행 거리</span>
+            <span style={{ fontSize: '12px', color: 'var(--text-sub)' }}>{isEcoMode ? '에코 모드' : '표준 모드'}</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
+            <span style={{ fontSize: '32px', fontWeight: '800', color: 'var(--point-blue)', lineHeight: 1 }}>{range}</span>
+            <span style={{ fontSize: '18px', fontWeight: '600', color: 'var(--point-blue)' }}>km</span>
+          </div>
+        </div>
+
+        {/* Action Button Link to Destination */}
+        <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '10px' }}>
+          <button 
+            onClick={() => navigate('/recommend')}
+            style={{
+              backgroundColor: 'var(--point-blue)',
+              color: 'var(--white)',
+              border: 'none',
+              borderRadius: '16px',
+              padding: '18px',
+              fontSize: '17px',
+              fontWeight: '700',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              cursor: 'pointer',
+              boxShadow: '0 4px 12px rgba(0, 102, 255, 0.25)',
+            }}
+          >
+            <Navigation size={20} />
+            급속 충전소 찾아가기
+          </button>
+          
+          <button 
+            onClick={() => setShowSafetyModal(true)}
+            style={{
+              backgroundColor: 'var(--white)',
+              color: 'var(--text-main)',
+              border: '1px solid var(--border)',
+              borderRadius: '16px',
+              padding: '18px',
+              fontSize: '17px',
+              fontWeight: '700',
+              cursor: 'pointer',
+            }}
+          >
+            안전 모드 설정
+          </button>
+        </div>
+
+        {/* Safety Guard Modal */}
+        <AnimatePresence>
+          {showSafetyModal && (
+            <div style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0,0,0,0.5)',
+              zIndex: 100,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: '20px'
+            }}>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                style={{
+                  backgroundColor: 'var(--white)',
+                  borderRadius: '24px',
+                  padding: '24px',
+                  width: '100%',
+                  maxWidth: '340px',
+                  boxShadow: '0 20px 40px rgba(0,0,0,0.2)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '20px'
+                }}
+              >
+                {/* Header */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <div style={{ backgroundColor: '#e0f2fe', width: '40px', height: '40px', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'var(--point-blue)' }}>
+                    <ShieldAlert size={22} />
+                  </div>
+                  <div>
+                    <h3 style={{ margin: 0, fontSize: '18px', fontWeight: '700', color: 'var(--text-main)' }}>안전 설정 가이드</h3>
+                    <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-sub)' }}>주행 및 배터리 절약 모드를 관리합니다.</p>
+                  </div>
+                </div>
+
+                {/* Toggles Container */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  
+                  {/* Eco Mode Toggle */}
+                  <div 
+                    onClick={() => setIsEcoMode(!isEcoMode)}
+                    style={{
+                      border: '1px solid var(--border)',
+                      borderRadius: '16px',
+                      padding: '16px',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      backgroundColor: isEcoMode ? '#f0fdf4' : 'transparent',
+                      borderColor: isEcoMode ? '#86efac' : 'var(--border)',
+                      transition: 'all 0.2s ease'
+                    }}
+                  >
+                    <div style={{ flex: 1, paddingRight: '12px' }}>
+                      <div style={{ fontSize: '14px', fontWeight: '700', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        배터리 절약 모드 <Sparkles size={14} color={isEcoMode ? '#10b981' : 'var(--text-sub)'} />
+                      </div>
+                      <div style={{ fontSize: '11px', color: 'var(--text-sub)', marginTop: '4px', lineHeight: '1.4' }}>
+                        모터 토크 제한으로 배터리 이동 효율을 극대화합니다.
+                      </div>
+                    </div>
+                    
+                    {/* Switch UI */}
+                    <div style={{
+                      width: '44px',
+                      height: '24px',
+                      backgroundColor: isEcoMode ? '#10b981' : '#e5e7eb',
+                      borderRadius: '12px',
+                      padding: '2px',
+                      display: 'flex',
+                      justifyContent: isEcoMode ? 'flex-end' : 'flex-start',
+                      alignItems: 'center',
+                      transition: 'background-color 0.2s ease',
+                      boxSizing: 'border-box'
+                    }}>
+                      <div style={{
+                        width: '20px',
+                        height: '20px',
+                        backgroundColor: 'white',
+                        borderRadius: '50%',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                      }} />
+                    </div>
+                  </div>
+
+                  {/* Emergency Contact Toggle */}
+                  <div 
+                    onClick={() => setIsEmergencyShared(!isEmergencyShared)}
+                    style={{
+                      border: '1px solid var(--border)',
+                      borderRadius: '16px',
+                      padding: '16px',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      backgroundColor: isEmergencyShared ? '#eff6ff' : 'transparent',
+                      borderColor: isEmergencyShared ? '#bfdbfe' : 'var(--border)',
+                      transition: 'all 0.2s ease'
+                    }}
+                  >
+                    <div style={{ flex: 1, paddingRight: '12px' }}>
+                      <div style={{ fontSize: '14px', fontWeight: '700', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        보호자 긴급 위치 공유 <PhoneCall size={14} color={isEmergencyShared ? 'var(--point-blue)' : 'var(--text-sub)'} />
+                      </div>
+                      <div style={{ fontSize: '11px', color: 'var(--text-sub)', marginTop: '4px', lineHeight: '1.4' }}>
+                        방전 직전에 미리 등록된 보호자에게 현재 GPS 주소를 전송합니다.
+                      </div>
+                    </div>
+                    
+                    {/* Switch UI */}
+                    <div style={{
+                      width: '44px',
+                      height: '24px',
+                      backgroundColor: isEmergencyShared ? 'var(--point-blue)' : '#e5e7eb',
+                      borderRadius: '12px',
+                      padding: '2px',
+                      display: 'flex',
+                      justifyContent: isEmergencyShared ? 'flex-end' : 'flex-start',
+                      alignItems: 'center',
+                      transition: 'background-color 0.2s ease',
+                      boxSizing: 'border-box'
+                    }}>
+                      <div style={{
+                        width: '20px',
+                        height: '20px',
+                        backgroundColor: 'white',
+                        borderRadius: '50%',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                      }} />
+                    </div>
+                  </div>
+
+                </div>
+
+                {/* Action Button */}
+                <button
+                  onClick={() => setShowSafetyModal(false)}
+                  style={{
+                    backgroundColor: 'var(--text-main)',
+                    color: 'var(--white)',
+                    border: 'none',
+                    borderRadius: '12px',
+                    padding: '14px',
+                    fontSize: '15px',
+                    fontWeight: '700',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px',
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
+                  }}
+                >
+                  <CheckCircle2 size={18} />
+                  안전 설정 완료
+                </button>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+    );
+  }
+
+  // Low Battery Warning UI Layout (battery <= 15%)
   return (
     <motion.div 
       initial={{ opacity: 0 }}
@@ -78,7 +404,7 @@ const DangerScreen = () => {
         <AlertTriangle size={24} color="var(--point-red)" fill="var(--point-red)" stroke="var(--white)" style={{ flexShrink: 0, marginTop: '2px' }} />
         <div>
           <div style={{ color: 'var(--point-red)', fontWeight: '700', fontSize: '16px', marginBottom: '6px' }}>
-            주행 가능 거리가 {isEcoMode ? '1.3km (에코)' : '0.9km'} 밖에 남지 않았어요
+            주행 가능 거리가 {range}km 밖에 남지 않았어요
           </div>
           <div style={{ color: 'var(--text-sub)', fontSize: '14px' }}>
             {isEcoMode ? '배터리 절약 모드가 작동 중입니다. 최적 경로로 충전소로 이동하세요.' : '가까운 충전소를 확인하고 충전하세요.'}
@@ -102,9 +428,9 @@ const DangerScreen = () => {
           )}
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <div style={{ color: 'var(--point-red)', fontSize: '32px', fontWeight: '700', fontFamily: 'system-ui' }}>8%</div>
+          <div style={{ color: 'var(--point-red)', fontSize: '32px', fontWeight: '700', fontFamily: 'system-ui' }}>{battery}%</div>
           <div style={{ flex: 1, height: '10px', backgroundColor: '#f0f0f0', borderRadius: '5px', overflow: 'hidden' }}>
-            <div style={{ width: '8%', height: '100%', backgroundColor: 'var(--point-red)', borderRadius: '5px' }} />
+            <div style={{ width: `${battery}%`, height: '100%', backgroundColor: 'var(--point-red)', borderRadius: '5px' }} />
           </div>
         </div>
       </div>
@@ -336,6 +662,5 @@ const EvStation = ({ size = 24 }) => (
     <path d="M7 16v2" />
   </svg>
 );
-
 
 export default DangerScreen;
