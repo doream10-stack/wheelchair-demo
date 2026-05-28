@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useDragControls } from 'framer-motion';
 import { Leaf, ThermometerSnowflake, Mountain, AlertTriangle, Cloud, Map as MapIcon, Navigation as NavigationIcon, ChevronRight, Home, BatteryCharging, Play, Square, ChevronUp, ChevronDown } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useWheelchair } from '../context/WheelchairContext';
 
 const routeConfigs = {
   '1': {

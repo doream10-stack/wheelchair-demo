@@ -43,12 +43,12 @@ const RecommendationScreen = () => {
       name: '행복복지센터 충전소',
       walkTime: '8분',
       distance: '0.6km',
-      status: '거의 만차',
-      statusColor: '#ff9800',
+      status: '사용 가능',
+      statusColor: '#00c853',
       usage: '총 3대 중 2대 사용 중',
       image: '/station_2.png',
       canPhoneCharge: true,
-      canReserve: false
+      canReserve: true
     },
     {
       id: 3,
