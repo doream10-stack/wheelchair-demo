@@ -8,10 +8,10 @@ const routeConfigs = {
     name: '치인고속화도로 충전소',
     distance: '0.4km',
     time: '5분',
-    path: 'M 170 470 L 180 560 L 245 560 L 285 460 L 270 350',
+    path: 'M 170 470 L 195 435 L 245 375 L 270 350',
     keyframes: {
-      left: ['170px', '180px', '245px', '285px', '270px'],
-      top: ['470px', '560px', '560px', '460px', '350px']
+      left: ['170px', '195px', '245px', '270px'],
+      top: ['470px', '435px', '375px', '350px']
     },
     destPos: { left: '270px', top: '350px' },
     detourPath: 'M 170 470 L 130 450 L 100 400 L 110 330',
@@ -60,8 +60,11 @@ const RouteScreen = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   
   const navigate = useNavigate();
+  const { reservedStation } = useWheelchair();
   const location = useLocation();
-  const stationId = location.state?.stationId ? String(location.state.stationId) : '1';
+  const stationId = location.state?.stationId 
+    ? String(location.state.stationId) 
+    : (reservedStation?.id ? String(reservedStation.id) : '1');
   const currentRoute = routeConfigs[stationId] || routeConfigs['1'];
 
   // Auto-collapse bottom sheet when simulation starts

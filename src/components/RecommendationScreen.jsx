@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ChevronDown, Navigation, Star, Search, MapPin, Battery } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence, useDragControls } from 'framer-motion';
+import { useWheelchair } from '../context/WheelchairContext';
 
 const RecommendationScreen = () => {
   const [toastMessage, setToastMessage] = useState('');
@@ -9,6 +10,7 @@ const RecommendationScreen = () => {
   const [favorites, setFavorites] = useState([]);
   const dragControls = useDragControls();
   const navigate = useNavigate();
+  const { setReservedStation } = useWheelchair();
 
   const toggleFavorite = (stationId, stationName) => {
     setFavorites(prev => {
@@ -83,8 +85,9 @@ const RecommendationScreen = () => {
     }
   };
 
-  const handleReserve = (canReserve) => {
-    if (canReserve) {
+  const handleReserve = (station) => {
+    if (station.canReserve) {
+      setReservedStation(station);
       navigate('/dashboard');
     } else {
       setToastMessage('현재 예약이 꽉 차서 불가합니다.');
@@ -303,7 +306,7 @@ const RecommendationScreen = () => {
                       경로 안내
                     </button>
                     <button 
-                      onClick={() => handleReserve(station.canReserve)}
+                      onClick={() => handleReserve(station)}
                       style={{
                         backgroundColor: 'var(--point-blue)',
                         color: 'var(--white)',

@@ -2,9 +2,15 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle2, Navigation, MapPin, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useWheelchair } from '../context/WheelchairContext';
 
 const DashboardScreen = () => {
   const navigate = useNavigate();
+  const { reservedStation } = useWheelchair();
+
+  const stationName = reservedStation?.name || '치인고속화도로 충전소';
+  const stationDistance = reservedStation?.distance || '0.4km';
+  const stationTime = reservedStation?.walkTime ? `도보 ${reservedStation.walkTime}` : '약 5분';
 
   return (
     <motion.div 
@@ -46,7 +52,7 @@ const DashboardScreen = () => {
 
         <div style={{ width: '100%', backgroundColor: 'var(--white)', borderRadius: '20px', padding: '24px', boxShadow: 'var(--shadow)', marginBottom: '24px' }}>
           <div style={{ fontSize: '13px', color: 'var(--point-blue)', fontWeight: '700', marginBottom: '8px' }}>예약 번호: #A8201</div>
-          <h2 style={{ fontSize: '20px', fontWeight: '700', color: 'var(--text-main)', margin: '0 0 16px 0' }}>치인고속화도로 충전소</h2>
+          <h2 style={{ fontSize: '20px', fontWeight: '700', color: 'var(--text-main)', margin: '0 0 16px 0' }}>{stationName}</h2>
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -55,7 +61,7 @@ const DashboardScreen = () => {
               </div>
               <div>
                 <div style={{ fontSize: '12px', color: 'var(--text-sub)' }}>거리</div>
-                <div style={{ fontSize: '15px', fontWeight: '600', color: 'var(--text-main)' }}>0.4km</div>
+                <div style={{ fontSize: '15px', fontWeight: '600', color: 'var(--text-main)' }}>{stationDistance}</div>
               </div>
             </div>
             
@@ -65,7 +71,7 @@ const DashboardScreen = () => {
               </div>
               <div>
                 <div style={{ fontSize: '12px', color: 'var(--text-sub)' }}>예상 소요 시간</div>
-                <div style={{ fontSize: '15px', fontWeight: '600', color: 'var(--text-main)' }}>약 5분</div>
+                <div style={{ fontSize: '15px', fontWeight: '600', color: 'var(--text-main)' }}>{stationTime}</div>
               </div>
             </div>
           </div>
@@ -76,7 +82,7 @@ const DashboardScreen = () => {
       <div style={{ paddingBottom: 'calc(var(--safe-area-bottom) + 80px)' }}>
         <motion.button 
           whileTap={{ scale: 0.95 }}
-          onClick={() => navigate('/route')}
+          onClick={() => navigate('/route', { state: { stationId: reservedStation?.id || 1 } })}
           style={{
             width: '100%',
             backgroundColor: 'var(--point-blue)',
